@@ -1,0 +1,1 @@
+[![Build Status](https://travis-ci.org/Miguelmargar/django_blog.svg)](https://travis-ci.org/Miguelmargar/django_blog)
