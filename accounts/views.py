@@ -4,7 +4,7 @@ from django.contrib import auth
 from django.http import HttpResponse
 from django.contrib.auth import authenticate
 from .forms import UserLoginForm, UserRegistrationForm
-from posts.models import Post
+from products.models import Product
 
 # Create your views here.
 def login(request):
