@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load bootstrap_tags %}
+{% block content %}
+
+<p>User Name: {{ user.username }}</p>
+<p>User Email: {{ user.email }}</p>
+
+<h3>Liked Posts</h3>
+{% for post in user.liked_posts.all %}
+<p><a href="{% url 'post_detail' post.id %}"> {{ post.title }} </a></p>
+{% endfor %}
+
+{% endblock content %}
