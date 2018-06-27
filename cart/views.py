@@ -3,7 +3,18 @@ from products.models import Product
 # Create your views here.
 
 def view_cart(request):
-    return render(request, "cart/viewcart.html")
+    cart = request.session.get("cart", {})
+
+    products = []
+    for p in cart:
+        product = get_object_or_404(Product, pk=p)
+        
+        products.append({
+          "product": product,
+          "quantity": cart[p]
+        })
+    
+    return render(request, "cart/viewcart.html", {"cart": products})
 
 #the below adds a cart in session which is not permanent for the user - it's stored in memory
 def add_to_cart(request):
