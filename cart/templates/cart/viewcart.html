@@ -1,23 +1,26 @@
-{% extends 'base.html' %} 
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 
 <h3>This is the cart</h3>
-
-{% for p in cart %}
-<h5><span class="boldtext">Product Name:</span> {{ p.product.name }} </h5>
-<p><span class="boldtext">Product description:</span> {{ p.product.description }} </p>
-<img src="{{MEDIA_URL}}{{p.product.image}}">
-<p><span class="boldtext">Product price:</span> {{ p.product.price }} </p>
-<p><span class="boldtext">Product brand:</span> {{ p.product.brand }} </p>
-<p><span class="boldtext">Amount in Cart:</span> {{ p.quantity }} </p>
-<p><span class="boldtext">Total Product:</span> {{ p.sub_total }} </p>
-<form method="POST" action="{% url 'remove_from_cart' %}">
-    {% csrf_token %}
-    <input type="hidden" name="product_id" value="{{ p.product.id }}" />
-    <input type="submit" value="Remove" class="btn btn-success" />
-</form>
-{% endfor %}
-
+<div class="container">
+    <div class="row">
+        {% for p in cart %}
+        <div class="col-sm-6">
+            <h5><span class="boldtext">Product Name:</span> {{ p.product.name }} </h5>
+            <p><span class="boldtext">Product description:</span> {{ p.product.description }} </p>
+            <img src="{{MEDIA_URL}}{{p.product.image}}">
+            <p><span class="boldtext">Product price:</span> {{ p.product.price }} </p>
+            <p><span class="boldtext">Product brand:</span> {{ p.product.brand }} </p>
+            <p><span class="boldtext">Amount in Cart:</span> {{ p.quantity }} </p>
+            <p><span class="boldtext">Total Product:</span> {{ p.sub_total }} </p>
+            <form method="POST" action="{% url 'remove_from_cart' %}">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{ p.product.id }}" />
+                <input type="submit" value="Remove" class="btn btn-success" />
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 <h3>Grand Total: {{ cart_total }} </h3>
 
-{% endblock content %}
+<a href="{% url 'checkout' %}" class="btn btn-success" role="button">Checkout</a> {% endblock content %}
