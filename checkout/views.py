@@ -44,7 +44,7 @@ def checkout(request):
          
         order_form = OrderForm()
         payment_form = MakePaymentForm()
-        forms =  {'order_form': order_form, 'payment_form': payment_form}
+        forms =  {'order_form': order_form, 'payment_form': payment_form, 'publishable': settings.STRIPE_PUBLISHABLE} #settings here is not the file but the import
         #the below updates context variable with forms variable therefore can show context in the render at the  bottom
         context.update(forms)
         return render(request, "checkout/checkout.html", context)
@@ -86,4 +86,4 @@ def checkout(request):
     
     
     
-    #'publishable': settings.STRIPE_PUBLISHABLE
+    #
