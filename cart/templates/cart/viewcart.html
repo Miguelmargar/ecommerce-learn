@@ -1,6 +1,7 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
+{% block content %}
 
-<h3>This is the cart</h3>
+<h3>These are your products</h3>
 <div class="container">
     <div class="row">
         {% for p in cart %}
@@ -21,6 +22,11 @@
         {% endfor %}
     </div>
 </div>
+<br>
+<div>
 <h3>Grand Total: {{ cart_total }} </h3>
 
-<a href="{% url 'checkout' %}" class="btn btn-success" role="button">Checkout</a> {% endblock content %}
+<a href="{% url 'checkout' %}" class="btn btn-success" role="button">Checkout</a>
+</div>
+{% endblock content %}
+

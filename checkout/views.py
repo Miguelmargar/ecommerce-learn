@@ -15,18 +15,57 @@ from django.conf import settings
 
 # Create your views here.
 def checkout(request):
-    # if request.method=="POST":
-    #     order_form = OrderForm(request.POST)    
-    #     payment_form = MakePaymentForm(request.POST)
+    if request.method=="POST":
+        order_form = OrderForm(request.POST, request.FILES)    
+        payment_form = MakePaymentForm(request.POST, request.FILES)
         
-    #     if order_form.is_valid() and payment_form.is_valid():
-    #         # Save The Order
-    #         order = order_form.save(commit=False)
-    #         order.date = timezone.now()
-    #         order.save()
+        if order_form.is_valid():
+            # Save The Order and payment_form.is_valid()
+            order = order_form.save()
+            #line below is not needed as we added auto_now_add=True in the date filed in the model therefore we do not need in the line above a commit="False" either- and do not need order.save() either as it is done in the line above too
+            #order.date = timezone.now() 
+            #order.save()
+            cart = request.session.get('cart', {})
+            #the below loops through product_id and quantity as cart.items() makes them a tuple.
+            for product_id, quantity in cart.items():
+                line_item = OrderLineItem()
+                line_item.order = order
+                line_item.product = get_object_or_404(Product, pk=product_id)
+                line_item.quantity = quantity
+                line_item.save()
+            #below deletes cart from session when it is paid for    
+            del request.session["cart"]      
+        return HttpResponse("form sent")
+    else:
+        cart = request.session.get("cart", {})
+        cart_total = 0
+        cart_items = []
+        for p in cart:
+            product = get_object_or_404(Product, pk=p)
+            quantity = cart[p]
+            
+            cart_item = {
+              "product": product,
+              "quantity": quantity,
+              "sub_total": product.price * quantity
+            }
+            cart_items.append(cart_item)
+            cart_total += cart_item["sub_total"]
+         
+        order_form = OrderForm()
+        payment_form = MakePaymentForm()
+        context = {'order_form': order_form, 'payment_form': payment_form, "cart": cart_items, "cart_total": cart_total}
+    
+        return render(request, "checkout/checkout.html", context)
+    
+    
+        
+        
+        
+     
         
     #         # Save the Order Line Items
-    #         cart = request.session.get('cart', {})
+            
     #         save_order_items(order, cart)
         
     #         # Charge the Card
@@ -49,14 +88,11 @@ def checkout(request):
     #             del request.session['cart']
     #             return redirect("home")
     # else:
-        order_form = OrderForm()
-        payment_form = MakePaymentForm()
-        context = {'order_form': order_form, 'payment_form': payment_form}
-        # cart = request.session.get('cart', {})
+       
         # cart_items_and_total = get_cart_items_and_total(cart)
         # context.update(cart_items_and_total)
     
-        return render(request, "checkout/checkout.html", context)
+    
     
     
     #'publishable': settings.STRIPE_PUBLISHABLE
