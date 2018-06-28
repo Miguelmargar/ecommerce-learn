@@ -1,29 +1,16 @@
 from django.shortcuts import render, get_object_or_404, HttpResponse, redirect
 from products.models import Product
+from .utils import get_cart_items_and_total
 # Create your views here.
 
 def view_cart(request):
     #the below creates a session in memory
     cart = request.session.get("cart", {})
-    cart_total = 0
-    #the below loops through cart appends each product to the list created
-    cart_items = []
-    for p in cart:
-        product = get_object_or_404(Product, pk=p)
-        quantity = cart[p]
-        
-        cart_item = {
-          "product": product,
-          "quantity": quantity,
-          "sub_total": product.price * quantity
-        }
-        #the below apends all cart_item in the loop to the cart_items list created above the loop
-        cart_items.append(cart_item)
-        #the below adds all the sub_total(s) to cart_total variable created above which starts with 0
-        cart_total += cart_item["sub_total"]
+    #the line below is a refactored line which long version is in .utils
+    context = get_cart_items_and_total(cart)
         
     #the below renders the html page and gives the cart_items list to cart to be able to use cart in the html to loop through it
-    return render(request, "cart/viewcart.html", {"cart": cart_items, "cart_total": cart_total })
+    return render(request, "cart/viewcart.html", context)
 
 #the below adds a cart in session which is not permanent for the user - it's stored in memory
 def add_to_cart(request):

@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from .forms import OrderForm, MakePaymentForm
 from products.models import Product
 #from decimal import Decimal
-#from cart.utils import get_cart_items_and_total
+from cart.utils import get_cart_items_and_total
 #from django.utils import timezone
 from .models import OrderLineItem
 #from django.contrib import messages
@@ -37,25 +37,16 @@ def checkout(request):
             del request.session["cart"]      
         return HttpResponse("form sent")
     else:
+        #this happens if it's a get and it shows the check page
         cart = request.session.get("cart", {})
-        cart_total = 0
-        cart_items = []
-        for p in cart:
-            product = get_object_or_404(Product, pk=p)
-            quantity = cart[p]
-            
-            cart_item = {
-              "product": product,
-              "quantity": quantity,
-              "sub_total": product.price * quantity
-            }
-            cart_items.append(cart_item)
-            cart_total += cart_item["sub_total"]
+        #refactoring used here again- this function is in cart.utils
+        context = get_cart_items_and_total(cart)
          
         order_form = OrderForm()
         payment_form = MakePaymentForm()
-        context = {'order_form': order_form, 'payment_form': payment_form, "cart": cart_items, "cart_total": cart_total}
-    
+        forms =  {'order_form': order_form, 'payment_form': payment_form}
+        #the below updates context variable with forms variable therefore can show context in the render at the  bottom
+        context.update(forms)
         return render(request, "checkout/checkout.html", context)
     
     
