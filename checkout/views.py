@@ -38,7 +38,7 @@ def checkout(request):
                 messages.error(request, "Your card was declined!")
 
             if customer.paid:
-                messages.error(request, "You have successfully paid")
+                messages.success(request, "You have successfully paid")
 
                 # Send Email
                 send_confirmation_email(request.user.email, request.user, items_and_total)

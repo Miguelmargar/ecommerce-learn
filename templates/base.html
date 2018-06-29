@@ -43,6 +43,16 @@
             </div>
         </nav>
     </header>
+     {% if messages %}
+        <div class="alert alert-success">
+            <div class="messages">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+    
     {% block content %} 
     {% endblock %}
 </body>

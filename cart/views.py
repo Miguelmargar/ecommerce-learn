@@ -15,7 +15,7 @@ def view_cart(request):
 #the below adds a cart in session which is not permanent for the user - it's stored in memory
 def add_to_cart(request):
     #get the product we are adding
-    id = request.POST["product_id"]
+    id = request.POST["product_id"]#product id here could be banana but has to be the same as in the html name tag
     product = get_object_or_404(Product, pk=id)
     #get the current cart
     cart = request.session.get("cart", {})
@@ -28,7 +28,7 @@ def add_to_cart(request):
     return redirect("get_products")   
     
 def remove_from_cart(request):
-    id = request.POST["product_id"]
+    id = request.POST["product_id"]#product id here could be banana but has to be the same as in the html name tag
     product = get_object_or_404(Product, pk=id)
     cart = request.session.get("cart", {})
     if cart[id] > 1:

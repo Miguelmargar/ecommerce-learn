@@ -2,6 +2,7 @@
 {% block content %}
 
 <h3>These are your products</h3>
+{% if cart|length > 0 %}
 <div class="container">
     <div class="row">
         {% for p in cart %}
@@ -28,5 +29,8 @@
 
 <a href="{% url 'checkout' %}" class="btn btn-success" role="button">Checkout</a>
 </div>
+{% else %}
+    Your cart is empty
+{% endif %}
 {% endblock content %}
 
